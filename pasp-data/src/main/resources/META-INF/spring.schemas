@@ -1,0 +1,2 @@
+http\://www.pasp.ctg.com/schema/pasp/pasp-data-2.0.xsd=../com/github/pasp/data/config/pasp-data-2.0.xsd
+http\://www.pasp.ctg.com/schema/pasp/pasp-data.xsd=../com/github/pasp/data/config/pasp-data-2.0.xsd

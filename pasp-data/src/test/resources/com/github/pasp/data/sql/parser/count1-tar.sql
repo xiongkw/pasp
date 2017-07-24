@@ -1,0 +1,1 @@
+select count(1) from (select * from t_user ) count_temp

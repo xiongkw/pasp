@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2010 The myBatis Team Licensed under the Apache License, Version 
+	2.0 (the "License"); you may not use this file except in compliance with 
+	the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+	Unless required by applicable law or agreed to in writing, software distributed 
+	under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
+	OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
+	the specific language governing permissions and limitations under the License. -->
+
+<!-- This is a org.mybatis.spring.sample context that shows four different 
+	ways to integrate with Spring. FooService* are beans that act as business 
+	services. All of the services implement FooService which is annotated as 
+	@Transactional. Each one is injected with a mapper coded/created in a different 
+	way: userMapperBean is created with a MapperFactoryBean (has no implementation) 
+	userMapper is searched and registered by the MapperScannerConfigurer (has 
+	no implementation) userMapperDaoSupport extends SqlSessionDaoSupport userMapperSqlSession 
+	uses directly MyBatis API (has no transaction support) version: $Id: context.xml 
+	2717 2010-10-15 15:37:00Z eduardo.macarron $ -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+     http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+     http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+	default-lazy-init="true">
+	
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreUnresolvablePlaceholders" value="true"/>
+		<property name="locations">
+			<list>
+				<value>classpath:conf/pasp.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreUnresolvablePlaceholders" value="true"/>
+		<property name="ignoreResourceNotFound" value="true"/>
+		<property name="locations">
+			<list>
+				<value>classpath:conf/jdbc.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="pasp-dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		destroy-method="close">
+		<!-- 基本属性 url、user、password -->
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+
+		<!-- 配置初始化大小、最小、最大 -->
+		<property name="initialSize" value="${jdbc.initialSize}" />
+		<property name="minIdle" value="${jdbc.minIdle}" />
+		<property name="maxActive" value="${jdbc.maxActive}" />
+
+		<!-- 配置获取连接等待超时的时间 -->
+		<property name="maxWait" value="${jdbc.maxWait}" />
+
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="${jdbc.timeBetweenEvictionRunsMillis}" />
+
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="${jdbc.minEvictableIdleTimeMillis}" />
+
+		<property name="validationQuery" value="${jdbc.validationQuery}" />
+		<property name="testWhileIdle" value="${jdbc.testWhileIdle}" />
+		<property name="testOnBorrow" value="${jdbc.testOnBorrow}" />
+		<property name="testOnReturn" value="${jdbc.testOnReturn}" />
+
+		<!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+		<!-- 通常来说，只需要修改initialSize、minIdle、maxActive。 如果用Oracle，则把poolPreparedStatements配置为true，mysql可以配置为false。分库分表较多的数据库，建议配置为false。 -->
+		<property name="poolPreparedStatements" value="${jdbc.poolPreparedStatements}" />
+		<property name="maxPoolPreparedStatementPerConnectionSize"
+			value="${jdbc.maxPoolPreparedStatementPerConnectionSize}" />
+		<property name="removeAbandoned" value="${jdbc.removeAbandoned}"></property>
+		<property name="removeAbandonedTimeoutMillis" value="${jdbc.removeAbandonedTimeoutMillis}"></property>
+		<property name="resetStatEnable" value="${jdbc.resetStatEnable}"></property>
+		<property name="filters" value="config"></property>
+		<property name="connectProperties">
+			<props>
+				<prop key="config.decrypt">${jdbc.decrypt}</prop>
+			</props>
+		</property>
+		<!-- 配置监控统计拦截的filters -->
+		<!-- <property name="proxyFilters"> <list> <ref bean="stat-filter" /> <ref 
+			bean="log-filter" /> </list> </property> -->
+
+	</bean>
+
+	<bean id="pasp-jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="pasp-dataSource" />
+	</bean>
+
+	<bean class="org.springframework.core.DefaultParameterNameDiscoverer" />
+
+	<bean id="pasp-data-useCacheAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+		<property name="advice">
+			<bean class="com.github.pasp.data.cache.UseCacheMethodInterceptor" />
+		</property>
+		<property name="pointcut">
+			<bean class="com.github.pasp.data.cache.ClosableCacheMatchingPointcut">
+				<property name="cacheOn" value="${pasp.cache}" />
+				<property name="methodAnnotationType">
+					<value>com.github.pasp.core.UseCache</value>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="pasp-data-flushCacheAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+		<property name="advice">
+			<bean class="com.github.pasp.data.cache.FlushCacheMethodInterceptor" />
+		</property>
+		<property name="pointcut">
+			<bean class="com.github.pasp.data.cache.ClosableCacheMatchingPointcut">
+				<property name="cacheOn" value="${pasp.cache}" />
+				<property name="methodAnnotationType">
+					<value>com.github.pasp.core.FlushCache</value>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean
+		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
+
+	<bean class="com.github.pasp.data.cache.DefaultCacheHandler" />
+	
+	<bean id="pasp-data-entityInfoParser" class="com.github.pasp.data.dao.EntityInfoParser"></bean>
+	
+	<bean id="pasp-data-sqlBuilder" class="com.github.pasp.data.dao.SqlBuilderImpl"></bean>
+
+</beans>

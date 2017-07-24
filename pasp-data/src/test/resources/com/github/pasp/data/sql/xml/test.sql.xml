@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlList>
+	<sql id="select">
+		select * from t_users
+	</sql>
+	
+	<sql id="insert">
+		insert into t_users 
+		values(?,?,?)
+	</sql>
+	
+	<sql id="update">
+		update t_users 
+		set name=?
+	</sql>
+	
+	<sql id="delete">
+		delete t_users 
+		where name=?
+	</sql>
+</sqlList>

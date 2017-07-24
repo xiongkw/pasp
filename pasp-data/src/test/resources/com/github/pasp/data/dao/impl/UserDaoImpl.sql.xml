@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlList>
+	<sql id="getByName">
+		select * from T_USER where USER_NAME=?
+	</sql>
+
+	<sql id="query">
+		select * from T_USER
+	</sql>
+
+	<sql id="queryUserDynamic">
+	<![CDATA[
+		select * from T_USER where 
+		<@Trim str="AND">
+		<#if userName??>
+		AND USER_NAME like '%${userName}%'
+		</#if>
+		<#if age??>
+		AND AGE=${age}
+		</#if>
+		<#if gender??>
+		AND GENDER='${gender}'
+		</#if>
+		</@Trim>
+	]]>
+	</sql>
+	
+	<sql id="updateDynamic">
+	<![CDATA[
+		update T_USER set
+		<@Trim str=','>
+		<#if userName??>
+		USER_NAME='${userName}',
+		</#if>
+		<#if age??>
+		AGE=${age},
+		</#if>
+		<#if gender??>
+		GENDER='${gender}',
+		</#if>
+		</@Trim>
+		where USER_ID=${userId}
+	]]>
+	</sql>
+
+	<sql id="count">
+		select count(1) from T_USER
+	</sql>
+	
+</sqlList>
