@@ -1,2 +1,2 @@
 # pasp
-A j2ee sdk
+A restful styled j2ee sdk on spring framework
