@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+	<!-- jdbc连接 -->
+	<jdbc>
+		<driverClass>com.mysql.jdbc.Driver</driverClass>
+		<url>jdbc:mysql://127.0.0.1:3306/pasp_test</url>
+		<username>root</username>
+		<password>root</password>
+	</jdbc>
+	<!-- 项目风格 defadefaultmple -->
+	<theme>default</theme>
+	<!-- 数据库integer类型是否强制转换为java Long -->
+	<integerForceLong>true</integerForceLong>
+	<!-- 数表库表前缀，生成的实体类名会去掉前缀 -->
+	<tableNamePrefixes>t_,sys_</tableNamePrefixes>
+	<!-- 项目groupId -->
+	<groupId>org.pasp</groupId>
+	<!-- 项目artifactId -->
+	<artifactId>sample</artifactId>
+	<!-- 版本 -->
+	<version>1.0.0-SNAPSHOT</version>
+	<!-- pasp version -->
+	<paspVersion>1.0.0</paspVersion>
+	<!-- 基础包名 -->
+	<basePackage>org.pasp.sample</basePackage>
+	
+	<!-- 功能模块，项目代码按功能模块划分 -->
+	<module name="system">
+		<!-- 数据库表，每个表对应一个实体 ，versionId:用来做乐观锁的字段 -->
+	    <table versionId="lock">t_user</table>
+	    <table>t_role</table>
+	</module>
+	<!--多个module分别定义-->
+	<!--<module></module>-->
+</config>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+	<!-- jdbc连接 -->
+	<jdbc>
+		<driverClass>com.mysql.jdbc.Driver</driverClass>
+		<url>jdbc:mysql://10.142.90.21:8806/pasp_test</url>
+		<username>ctgae</username>
+		<password>ctgae123!@#</password>
+	</jdbc>
+	<!-- 项目风格pasp|alogic -->
+	<theme>pasp</theme>
+	<!-- 数据库integer类型是否强制转换为java Long -->
+	<integerForceLong>true</integerForceLong>
+	<!-- 数表库表前缀，生成的实体类名会去掉前缀 -->
+	<tableNamePrefixes>tb_bm_,pz_gg_,pz_cp_,t_,sys_</tableNamePrefixes>
+	<!-- 项目groupId -->
+	<groupId>org.pasp</groupId>
+	<!-- 项目artifactId -->
+	<artifactId>sample</artifactId>
+	<!-- 版本 -->
+	<version>1.0.0-SNAPSHOT</version>
+	<!-- 基础包名 -->
+	<basePackage>org.pasp.sample</basePackage>
+	
+	<!-- 功能模块，项目代码按功能模块划分 -->
+	<module name="product">
+		<!-- 数据库表，每个表对应一个实体  -->
+	    <table shardingIds="id,orgRelId(true|false|true|true)" versionId="version">PZ_CP_CUSTOMER</table>
+	    <table shardingIds="id,orgRelId(true|false|true|true)" versionId="version">PZ_CP_PROD</table>
+	</module>
+	
+	<module name="system">
+	    <table shardingIds="id,orgRelId(true|false|true|true)" versionId="version">t_user</table>
+	    <table shardingIds="id,orgRelId(true|false|true|true)" versionId="version">t_role</table>
+	</module>
+</config>
