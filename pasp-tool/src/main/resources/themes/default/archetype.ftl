@@ -49,6 +49,7 @@
 		<source>
 			<path>src/main/resources/${basePackage?replace(".","/")}/data/${e.moduleName}/impl/${e.entityName}DaoImpl.sql.xml</path>
 			<template>data/sql.xml.ftl</template>
+            <entity>${e.entityName}</entity>
 		</source>
 		</#list>
 	</module>

@@ -19,8 +19,6 @@ public class EntityInfo {
 
 	private List<FieldInfo> fields;
 
-	private boolean isShardingBean;
-	
 	private Set<String> importList = new HashSet<String>();
 
 	private Set<String> entityImportList = new HashSet<String>();
@@ -85,10 +83,6 @@ public class EntityInfo {
 		if (im != null) {
 			importList.add(im);
 		}
-		if (f.isShardingId()) {
-			entityImportList.add("com.github.pasp.core.Sharding");
-			this.setShardingBean(true);
-		}
 		if (f.isVersionId()) {
 			entityImportList.add("javax.persistence.Version");
 		}
@@ -105,14 +99,6 @@ public class EntityInfo {
 			type = type.substring(0, type.indexOf(ARRAY));
 		}
 		return type;
-	}
-
-	public boolean isShardingBean() {
-		return isShardingBean;
-	}
-
-	public void setShardingBean(boolean isShardingBean) {
-		this.isShardingBean = isShardingBean;
 	}
 
 	public Set<String> getEntityImportList() {

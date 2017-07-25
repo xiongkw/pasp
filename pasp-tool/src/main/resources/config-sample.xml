@@ -3,7 +3,7 @@
 	<!-- jdbc连接 -->
 	<jdbc>
 		<driverClass>com.mysql.jdbc.Driver</driverClass>
-		<url>jdbc:mysql://127.0.0.1:3306/pasp_test</url>
+		<url>jdbc:mysql://127.0.0.1:3306/pasp</url>
 		<username>root</username>
 		<password>root</password>
 	</jdbc>

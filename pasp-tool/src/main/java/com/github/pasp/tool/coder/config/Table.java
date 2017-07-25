@@ -9,8 +9,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 public class Table {
 	private String name;
 
-	private Set<String> shardingIds;
-
 	private String versionId;
 
 	@XmlValue
@@ -20,16 +18,6 @@ public class Table {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	@XmlAttribute
-	@XmlJavaTypeAdapter(StringSetAdapter.class)
-	public Set<String> getShardingIds() {
-		return shardingIds;
-	}
-
-	public void setShardingIds(Set<String> shardingIds) {
-		this.shardingIds = shardingIds;
 	}
 
 	@XmlAttribute

@@ -40,7 +40,7 @@ public class EntityInfoResolver implements IEntityInfoResolver {
 				List<Table> tables = module.getTables();
 				for (Table table : tables) {
 					EntityInfo entityInfo = readEntityInfo(table.getName(), conn, tableNamePrefixes,
-							config.isIntegerForceLong(), table.getShardingIds(), table.getVersionId());
+							config.isIntegerForceLong(), table.getVersionId());
 					entityInfo.setModuleName(moduleName);
 					entities.add(entityInfo);
 				}
@@ -54,7 +54,7 @@ public class EntityInfoResolver implements IEntityInfoResolver {
 	}
 
 	private EntityInfo readEntityInfo(String tableName, Connection connection, String[] tableNamePrefixes,
-			boolean integerForceLong, Set<String> shardingIds, String versionId) throws SQLException {
+			boolean integerForceLong, String versionId) throws SQLException {
 		EntityInfo entity = new EntityInfo();
 		DatabaseMetaData metaData = connection.getMetaData();
 		entity.setTableName(tableName);
@@ -97,10 +97,6 @@ public class EntityInfoResolver implements IEntityInfoResolver {
 				field.setScale(columns.getInt("DECIMAL_DIGITS"));
 				field.setFullJavaType(JavaTypeResolver.calculateJavaType(dbType, integerForceLong));
 				field.setNullable(columns.getInt("NULLABLE") == DatabaseMetaData.columnNoNulls);
-				if (isShardingId(shardingIds, columnName)) {
-					field.setShardingId(true);
-					entity.setShardingBean(true);
-				}
 				if (columnName.equalsIgnoreCase(versionId)) {
 					field.setVersionId(true);
 				}
@@ -119,18 +115,6 @@ public class EntityInfoResolver implements IEntityInfoResolver {
 				columns.close();
 			}
 		}
-	}
-
-	private boolean isShardingId(Set<String> shardingIds, String columnName) {
-		if (shardingIds == null) {
-			return false;
-		}
-		for (String string : shardingIds) {
-			if (columnName.equalsIgnoreCase(string)) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	private String caculateEntityName(String tableName, String[] tableNamePrefixes) {

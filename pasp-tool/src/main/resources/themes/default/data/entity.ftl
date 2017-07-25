@@ -21,9 +21,6 @@ public class ${entityName} extends Entity<${pk.javaType}> {
 	 */
 	@Id
 	@Column(name = "${pk.columnName}")
-	<#if pk.shardingId>
-	@Sharding
-	</#if>
 	private ${pk.javaType} ${pk.name};
 	
 	</#if>
@@ -33,9 +30,6 @@ public class ${entityName} extends Entity<${pk.javaType}> {
 	 * ${field.comment!""}
 	 */
 	@Column(name = "${field.columnName}")
-	<#if field.shardingId>
-	@Sharding
-	</#if>
 	<#if field.versionId>
 	@Version
 	</#if>

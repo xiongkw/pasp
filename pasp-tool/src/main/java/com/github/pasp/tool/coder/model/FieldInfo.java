@@ -19,8 +19,6 @@ public class FieldInfo {
 	
 	private boolean nullable;
 
-	private boolean isShardingId;
-
 	private boolean isVersionId;
 
 	public String getName() {
@@ -92,14 +90,6 @@ public class FieldInfo {
 			return this.fullJavaType;
 		}
 		return this.fullJavaType.substring(this.fullJavaType.lastIndexOf(".") + 1);
-	}
-
-	public boolean isShardingId() {
-		return isShardingId;
-	}
-
-	public void setShardingId(boolean isShardingId) {
-		this.isShardingId = isShardingId;
 	}
 
 	public boolean isVersionId() {
